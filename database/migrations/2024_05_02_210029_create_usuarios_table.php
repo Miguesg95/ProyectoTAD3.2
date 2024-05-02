@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("password");
             $table->string("email");
             $table->boolean("admin")->default(false);
+            $table->foreignId('carrito_id')->nullable()->constrained();
         });
     }
 
