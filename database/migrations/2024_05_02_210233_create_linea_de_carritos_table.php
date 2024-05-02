@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer("cantidad");
             $table->double("importeParcial");
             $table->foreignId('carrito_id')->nullable()->constrained();
-            $table->foreignId('usuario_id')->nullable()->constrained();
+            $table->foreignId('calzado_id')->nullable()->constrained();
         });
     }
 
