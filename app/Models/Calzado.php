@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Calzado extends Model
 {
     use HasFactory;
+
+    public function lineaDeProducto (){
+        return $this->belongsTo(LineaDeProducto::class);
+    }
 }
