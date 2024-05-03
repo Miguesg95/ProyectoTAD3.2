@@ -53,5 +53,9 @@ class User extends Authenticatable
         return $this->hasMany(Venta::class);
     }
 
+    public function rol (){
+        return $this->hasOne(Rol::class);
+    }
+
 
 }
