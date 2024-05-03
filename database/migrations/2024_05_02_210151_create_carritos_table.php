@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->double("importeTotal");
-            $table->foreignId('usuario_id')->nullable()->constrained();
+            $table->foreignId('user_id')->nullable()->constrained();
         });
     }
 
