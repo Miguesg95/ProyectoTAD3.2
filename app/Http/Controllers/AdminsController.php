@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Calzado;
 use App\Models\User;
 use App\Models\Venta;
+use App\Models\Rol;
 
 class AdminsController extends Controller
 {
@@ -13,7 +14,8 @@ class AdminsController extends Controller
         $calzados = Calzado::all();
         $users = User::all();
         $ventas = Venta::all();
-        return view("adminPanel",@compact("calzados","users","ventas"));
+        $roles = Rol::all();
+        return view("adminPanel",@compact("calzados","users","ventas","roles"));
     }
 
     public function crearCalzado(Request $request) {
@@ -22,6 +24,7 @@ class AdminsController extends Controller
         $calzado -> marca = $request -> marca;
         $calzado -> precio = $request -> precio;
         $calzado -> descripcion = $request -> descripcion;
+        $calzado -> stock = $request -> stock;
         $calzado -> save();
         return back() -> with('mensaje', 'Calzado dado de alta con éxito');
     }
@@ -38,12 +41,14 @@ class AdminsController extends Controller
             'marca' => 'required',
             'descripcion' => 'required',
             'precio' => 'required',
+            'stock' => 'required',
             ]);
         $calzado = Calzado::findOrFail($id);
         $calzado -> nombre = $request -> nombre;
         $calzado -> marca = $request -> marca;
         $calzado -> precio = $request -> precio;
         $calzado -> descripcion = $request -> descripcion;
+        $calzado -> stock = $request -> stock;
         $calzado -> save();
         return back();
     }
@@ -54,7 +59,6 @@ class AdminsController extends Controller
         $user -> email = $request -> email;
         $user -> password = $request -> password;
         $user -> rol_id = $request -> rol_id;
-        #$user -> rol() -> attach($request -> rol_id);
         $user -> save();
         return back() -> with('mensaje', 'Usuario dado de alta con éxito');
     }
@@ -77,9 +81,53 @@ class AdminsController extends Controller
         $user -> email = $request -> email;
         $user -> password = $request -> password;
         $user -> rol_id = $request -> rol_id;
-        #$user -> rol() -> detach();
-        #$user -> rol() -> attach($request -> rol_id);
         $user -> save();
+        return back();
+    }
+
+    public function crearRol(Request $request) {
+        $rol = new Rol;
+        $rol -> name = $request -> name;
+        $rol -> save();
+        return back() -> with('mensaje', 'Rol dado de alta con éxito');
+    }
+
+    public function eliminarRol($id) {
+        $rol = Rol::findOrFail($id);
+        $rol -> delete();
+        return back();
+    }
+
+    public function actualizarRol(Request $request, $id) {
+        $request -> validate([
+            'name' => 'required'
+            ]);
+        $rol = Rol::findOrFail($id);
+        $rol -> name = $request -> name;
+        $rol -> save();
+        return back();
+    }
+
+    public function crearVenta(Request $request) {
+        $venta = new Venta;
+        $venta -> name = $request -> name; 
+        $venta -> save();
+        return back() -> with('mensaje', 'Rol dado de alta con éxito');
+    }
+
+    public function eliminarVenta($id) {
+        $venta = Venta::findOrFail($id);
+        $venta -> delete();
+        return back();
+    }
+
+    public function actualizarVenta(Request $request, $id) {
+        $request -> validate([
+            'name' => 'required'
+            ]);
+        $venta = Venta::findOrFail($id);
+        $venta -> name = $request -> name;
+        $venta-> save();
         return back();
     }
 }
