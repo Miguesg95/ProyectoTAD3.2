@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string("nombre");
             $table->string("marca");
+            $table->integer("stock");
             $table->string("descripcion");
             $table->double("precio");
         });
