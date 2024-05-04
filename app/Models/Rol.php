@@ -12,6 +12,17 @@ class Rol extends Model
     public function users (){
         return $this->hasMany(User::class);
     }
+
+    public function listarUsers (){
+        if(count($this->users) == 0){
+            echo "No hay usuarios para este Rol";
+        }else{
+            foreach ($this->users as $user){
+                echo "$user->username - $user->email<br>";
+            }
+        } 
+    }
+
 }
 
 
