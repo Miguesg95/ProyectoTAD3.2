@@ -13,7 +13,7 @@ class Carrito extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function lineaDeProductos (){
+    public function lineaDeCarritos (){
         return $this->hasMany(LineaDeProducto::class);
     }
 }

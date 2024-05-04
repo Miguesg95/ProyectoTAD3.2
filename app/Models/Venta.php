@@ -13,8 +13,8 @@ class Venta extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function lineaDeProductos (){
-        return $this->hasMany(LineaDeProducto::class);
+    public function lineaDeVentas (){
+        return $this->hasMany(LineaDeVenta::class);
     }
 
 }
