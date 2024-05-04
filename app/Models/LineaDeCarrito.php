@@ -14,6 +14,6 @@ class LineaDeCarrito extends Model
     }
 
     public function calzado (){
-        return $this->hasOne(Calzado::class);
+        return $this->belongsTo(Calzado::class);
     }
 }
