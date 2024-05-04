@@ -29,9 +29,6 @@ Route::put('/adminPanel/Venta/{id}', [ AdminsController::class, 'actualizarVenta
 Route::post('/adminPanel/LineaDeVenta', [ AdminsController::class, 'crearLineaDeVenta' ]) -> name('lineaDeVentaAdmin.crear');
 Route::get('/adminPanel/LineaDeVenta/{id}', [ AdminsController::class, 'eliminarLineaDeVenta' ]) -> name('lineaDeVentaAdmin.eliminar');
 
-Route::post('/adminPanel/Carrito', [ AdminsController::class, 'crearCarrito' ]) -> name('carritoAdmin.crear');
-Route::delete('/adminPanel/Carrito/{id}', [ AdminsController::class, 'eliminarCarrito' ]) -> name('carritoAdmin.eliminar');
-
 Route::post('/adminPanel/LineaDeCarrito', [ AdminsController::class, 'crearLineaDeCarrito' ]) -> name('lineaDeCarritoAdmin.crear');
 Route::get('/adminPanel/LineaDeCarrito/{id}', [ AdminsController::class, 'eliminarLineaDeCarrito' ]) -> name('lineaDeCarritoAdmin.eliminar');
 /* Rutas del Admin Panel */
