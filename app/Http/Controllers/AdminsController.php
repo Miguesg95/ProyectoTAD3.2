@@ -7,6 +7,9 @@ use App\Models\Calzado;
 use App\Models\User;
 use App\Models\Venta;
 use App\Models\Rol;
+use App\Models\LineaDeVenta;
+use App\Models\LineaDeCarrito;
+use App\Models\Carrito;
 
 class AdminsController extends Controller
 {
@@ -15,7 +18,8 @@ class AdminsController extends Controller
         $users = User::all();
         $ventas = Venta::all();
         $roles = Rol::all();
-        return view("adminPanel",@compact("calzados","users","ventas","roles"));
+        $carritos = Carrito::all();
+        return view("adminPanel",@compact("calzados","users","ventas","roles","carritos"));
     }
 
     public function crearCalzado(Request $request) {
@@ -60,6 +64,10 @@ class AdminsController extends Controller
         $user -> password = $request -> password;
         $user -> rol_id = $request -> rol_id;
         $user -> save();
+        $carrito = new Carrito;
+        $carrito -> user_id = $user ->id;
+        $carrito -> importeTotal = 0;
+        $carrito -> save();
         return back() -> with('mensaje', 'Usuario dado de alta con éxito');
     }
 
@@ -110,9 +118,21 @@ class AdminsController extends Controller
 
     public function crearVenta(Request $request) {
         $venta = new Venta;
-        $venta -> name = $request -> name; 
+        $carrito = Carrito::findOrFail($request -> carrito_id);
+        $venta -> user_id = $carrito -> user_id;
+        $venta -> estado = $request -> estado;
+        $venta -> importeTotal = $carrito -> importeTotal;
         $venta -> save();
-        return back() -> with('mensaje', 'Rol dado de alta con éxito');
+        foreach($carrito->lineaDeCarritos as $lineaDeCarrito){
+            $lineaDeVenta = new LineaDeVenta;
+            $lineaDeVenta -> venta_id = $venta -> id;
+            $lineaDeVenta -> calzado_id = $lineaDeCarrito -> calzado_id;
+            $lineaDeVenta -> cantidad = $lineaDeCarrito -> cantidad;
+            $lineaDeVenta -> importeParcial = $lineaDeCarrito -> importeParcial;
+            $lineaDeVenta -> save();
+            $lineaDeCarrito -> delete();
+        }
+        return back() -> with('mensaje', 'Venta dada de alta con éxito');
     }
 
     public function eliminarVenta($id) {
@@ -123,11 +143,69 @@ class AdminsController extends Controller
 
     public function actualizarVenta(Request $request, $id) {
         $request -> validate([
-            'name' => 'required'
+            'estado' => 'required'
             ]);
         $venta = Venta::findOrFail($id);
-        $venta -> name = $request -> name;
+        $venta -> estado = $request -> estado;
         $venta-> save();
+        return back();
+    }
+
+    public function crearLineaDeVenta(Request $request) {
+        $lineaDeVenta = new LineaDeVenta;
+        $lineaDeVenta -> venta_id = $request -> venta_id;
+        $lineaDeVenta -> calzado_id = $request -> calzado_id;
+        $lineaDeVenta -> cantidad = $request -> cantidad;
+        $calzado = Calzado::findOrFail($lineaDeVenta -> calzado_id);
+        $lineaDeVenta -> importeParcial = $calzado->precio * $lineaDeVenta -> cantidad;
+        $lineaDeVenta -> save();
+        $venta = Venta::findOrFail($lineaDeVenta -> venta_id);
+        $venta -> importeTotal = 0;
+        foreach($venta->lineaDeVentas as $lineaDeVenta){
+            $venta -> importeTotal += $lineaDeVenta -> importeParcial;
+        }
+        $venta -> save();
+        return back();
+    }
+
+    public function eliminarLineaDeVenta($id) {
+        $lineaDeVenta = LineaDeVenta::findOrFail($id);
+        $venta = Venta::findOrFail($lineaDeVenta -> venta_id);
+        $lineaDeVenta -> delete();
+        $venta -> importeTotal = 0;
+        foreach($venta->lineaDeVentas as $lineaDeVenta){
+            $venta -> importeTotal += $lineaDeVenta -> importeParcial;
+        }
+        $venta -> save();
+        return back();
+    }
+
+    public function crearLineaDeCarrito(Request $request) {
+        $lineaDeCarrito = new LineaDeCarrito;
+        $lineaDeCarrito -> carrito_id = $request -> carrito_id;
+        $lineaDeCarrito -> calzado_id = $request -> calzado_id;
+        $lineaDeCarrito -> cantidad = $request -> cantidad;
+        $calzado = Calzado::findOrFail($lineaDeCarrito -> calzado_id);
+        $lineaDeCarrito -> importeParcial = $calzado->precio * $lineaDeCarrito -> cantidad;
+        $lineaDeCarrito -> save();
+        $carrito = Carrito::findOrFail($lineaDeCarrito -> carrito_id);
+        $carrito -> importeTotal = 0;
+        foreach($carrito->lineaDeCarritos as $lineaDeCarrito){
+            $carrito -> importeTotal += $lineaDeCarrito -> importeParcial;
+        }
+        $carrito -> save();
+        return back();
+    }
+
+    public function eliminarLineaDeCarrito($id) {
+        $lineaDeCarrito = LineaDeCarrito::findOrFail($id);
+        $carrito = Carrito::findOrFail($lineaDeCarrito -> carrito_id);
+        $lineaDeCarrito -> delete();
+        $carrito -> importeTotal = 0;
+        foreach($carrito->lineaDeCarritos as $lineaDeCarrito){
+            $carrito -> importeTotal += $lineaDeCarrito -> importeParcial;
+        }
+        $carrito -> save();
         return back();
     }
 }
