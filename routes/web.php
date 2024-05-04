@@ -7,6 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+/* Rutas del Admin Panel */
 Route::get('/adminPanel', AdminsController::class)-> name('adminPanel.go');
 
 Route::post('/adminPanel/Calzado', [ AdminsController::class, 'crearCalzado' ]) -> name('calzadoAdmin.crear');
@@ -24,3 +25,16 @@ Route::put('/adminPanel/Rol/{id}', [ AdminsController::class, 'actualizarRol' ])
 Route::post('/adminPanel/Venta', [ AdminsController::class, 'crearVenta' ]) -> name('ventaAdmin.crear');
 Route::delete('/adminPanel/Venta/{id}', [ AdminsController::class, 'eliminarVenta' ]) -> name('ventaAdmin.eliminar');
 Route::put('/adminPanel/Venta/{id}', [ AdminsController::class, 'actualizarVenta' ]) -> name('ventaAdmin.actualizar');
+
+Route::post('/adminPanel/LineaDeVenta', [ AdminsController::class, 'crearLineaDeVenta' ]) -> name('lineaDeVentaAdmin.crear');
+Route::get('/adminPanel/LineaDeVenta/{id}', [ AdminsController::class, 'eliminarLineaDeVenta' ]) -> name('lineaDeVentaAdmin.eliminar');
+
+Route::post('/adminPanel/Carrito', [ AdminsController::class, 'crearCarrito' ]) -> name('carritoAdmin.crear');
+Route::delete('/adminPanel/Carrito/{id}', [ AdminsController::class, 'eliminarCarrito' ]) -> name('carritoAdmin.eliminar');
+Route::put('/adminPanel/Carrito/{id}', [ AdminsController::class, 'actualizarCarrito' ]) -> name('carrritoAdmin.actualizar');
+
+Route::post('/adminPanel/LineaDeCarrito', [ AdminsController::class, 'crearLineaDeCarrito' ]) -> name('lineaDeCarritoAdmin.crear');
+Route::get('/adminPanel/LineaDeCarrito/{id}', [ AdminsController::class, 'eliminarLineaDeCarrito' ]) -> name('lineaDeCarritoAdmin.eliminar');
+/* Rutas del Admin Panel */
+
+
