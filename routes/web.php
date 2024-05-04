@@ -17,6 +17,10 @@ Route::post('/adminPanel/User', [ AdminsController::class, 'crearUser' ]) -> nam
 Route::delete('/adminPanel/User/{id}', [ AdminsController::class, 'eliminarUser' ]) -> name('userAdmin.eliminar');
 Route::put('/adminPanel/User/{id}', [ AdminsController::class, 'actualizarUser' ]) -> name('userAdmin.actualizar');
 
+Route::post('/adminPanel/Rol', [ AdminsController::class, 'crearRol' ]) -> name('rolAdmin.crear');
+Route::delete('/adminPanel/Rol/{id}', [ AdminsController::class, 'eliminarRol' ]) -> name('rolAdmin.eliminar');
+Route::put('/adminPanel/Rol/{id}', [ AdminsController::class, 'actualizarRol' ]) -> name('rolAdmin.actualizar');
+
 Route::post('/adminPanel/Venta', [ AdminsController::class, 'crearVenta' ]) -> name('ventaAdmin.crear');
 Route::delete('/adminPanel/Venta/{id}', [ AdminsController::class, 'eliminarVenta' ]) -> name('ventaAdmin.eliminar');
 Route::put('/adminPanel/Venta/{id}', [ AdminsController::class, 'actualizarVenta' ]) -> name('ventaAdmin.actualizar');
