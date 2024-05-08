@@ -2,9 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminsController;
+use App\Http\Controllers\CarritosController;
+use App\Http\Controllers\IndexController;
+use App\Http\Controllers\CalzadosController;
+
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 /* Rutas del Admin Panel */
@@ -33,4 +37,20 @@ Route::post('/adminPanel/LineaDeCarrito', [ AdminsController::class, 'crearLinea
 Route::get('/adminPanel/LineaDeCarrito/{id}', [ AdminsController::class, 'eliminarLineaDeCarrito' ]) -> name('lineaDeCarritoAdmin.eliminar');
 /* Rutas del Admin Panel */
 
+
+
+/* Rutas del Carrito */
+Route::get('/carrito', CarritosController::class)->name('carrito');
+Route::post('/crear-venta', [CarritosController::class, 'crearVenta'])->name('crearVenta');
+
+/* Rutas del Carrito */
+
+
+/* Rutas del index y detalle */
+
+Route::get('/index', IndexController::class)-> name('index.go');
+Route::get('/calzado/{id}', [CalzadosController::class, 'detalle'])->name('calzado.detalle');
+Route::post('/carrito/agregar/{id}', [CarritosController::class, 'agregarProductoAlCarrito'])->name('carrito.agregar');
+
+/* Rutas del index y detalle */
 
