@@ -5,10 +5,13 @@ use App\Http\Controllers\AdminsController;
 use App\Http\Controllers\CarritosController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\CalzadosController;
+use App\Http\Controllers\UsersController;
+use App\Models\Calzado;
 
 
 Route::get('/', function () {
-    return view('index');
+    $calzados = Calzado::all();
+    return view("index", @compact("calzados"));
 });
 
 /* Rutas del Admin Panel */
@@ -54,3 +57,6 @@ Route::post('/carrito/agregar/{id}', [CarritosController::class, 'agregarProduct
 
 /* Rutas del index y detalle */
 
+/* Rutas del Area de Cliente */
+Route::get('/areaCliente', UsersController::class)-> name('client.go');
+/* Rutas del Area de Cliente */
