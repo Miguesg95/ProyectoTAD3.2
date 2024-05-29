@@ -18,11 +18,10 @@ class CalzadosController extends Controller
      */
     public function detalle($id)
     {
+        $usuario = auth()->user();
+        $usuarioId = $usuario->id;
         $calzado = Calzado::findOrFail($id);
-        $user_id = 2; // ID del usuario
-        $isFavorited = \App\Models\User::find($user_id)->favorites()->where('calzado_id', $calzado->id)->exists();
-
-
+        $isFavorited = \App\Models\User::find($usuarioId)->favorites()->where('calzado_id', $calzado->id)->exists();
         return view('detalle', compact('calzado', 'isFavorited'));
     }
 

@@ -8,22 +8,23 @@ use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {
-    private $userId = 2;
 
+
+    
     public function addFavorite($calzadoId)
     {
-        $user = User::findOrFail($this->userId);
+        $usuario = auth()->user();
         $calzado = Calzado::findOrFail($calzadoId);
-        $user->favorites()->attach($calzado);
+        $usuario->favorites()->attach($calzado);
 
         return back(); // Redirigir de vuelta a la página del producto
     }
 
     public function removeFavorite($calzadoId)
     {
-        $user = User::findOrFail($this->userId);
+        $usuario = auth()->user();
         $calzado = Calzado::findOrFail($calzadoId);
-        $user->favorites()->detach($calzado);
+        $usuario->favorites()->detach($calzado);
 
         return back(); // Redirigir de vuelta a la página del producto
     }

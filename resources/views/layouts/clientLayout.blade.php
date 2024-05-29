@@ -91,8 +91,12 @@
             </div>
             <div class="col-md-6 mt-3 mt-md-0">
                 <div class="d-flex justify-content-end align-items-center">
-                    <a href="/adminPanel" class="btn btn-outline-light me-3">Panel de Control</a>
-                    <a href="/login" class="btn btn-outline-light me-3">Iniciar Sesión</a>
+                    <a href="/index" class="btn btn-outline-light me-3">Índice</a>
+                    <a href="/areaCliente" class="btn btn-outline-light me-3">Área cliente</a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                    </form>
+                    <a href="#" class="btn btn-outline-light me-3" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
                     <a href="/carrito" class="text-white "><i class="bi bi-cart-fill fs-4"></i></a>
                 </div>
             </div>
@@ -114,7 +118,7 @@
             <br>
             <div class="row mt-3">
                 <div class="col">
-                    <p>&copy; {{ date('Y') }} Mayupo - Todos los derechos reservados</p>
+                    <p>&copy; {{ date('Y') }} Maryupo - Todos los derechos reservados</p>
                 </div>
             </div>
 

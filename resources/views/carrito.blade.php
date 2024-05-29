@@ -1,7 +1,7 @@
 @extends('layouts.clientLayout')
 
 @section('main')
-    <main class="container panel py-3 my-4 text-white border-top border-bottom">
+    <main class="container panel py-3 my-4 text-black border-top border-bottom">
 
         <h2 class="text-center">Tu Carrito</h2>
 
@@ -31,7 +31,7 @@
                                         @foreach ($carrito->lineaDeCarritos as $linea)
                                             <p class="text-start"><a
                                                     href="{{ route('lineaDeCarritoAdmin.eliminar', $linea->id) }}"
-                                                    class="border text-white bgButton rounded px-2 text-decoration-none"
+                                                    class="border text-black bgButton rounded px-2 text-decoration-none"
                                                     type="submit">X</a>
                                                 <span>{{ $linea->calzado->nombre }} - cantidad: {{ $linea->cantidad }} -
                                                     {{ $linea->importeParcial }}$</span>

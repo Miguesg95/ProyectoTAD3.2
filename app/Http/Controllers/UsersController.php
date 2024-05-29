@@ -11,10 +11,11 @@ use App\Models\LineaDeVenta;
 class UsersController extends Controller
 {
     public function __invoke(){
-        $user = User::findOrFail(2);
+        $user = auth()->user();
         return view("cliente",@compact("user"));
     }
 
+    //Funcion para que el administrador dé de alta a clientes y otros administradores
     public function crearUser(Request $request) {
         $user = new User;
         $user -> username = $request -> username;
@@ -29,20 +30,32 @@ class UsersController extends Controller
         return back() -> with('mensaje', 'Usuario dado de alta con éxito');
     }
 
-    public function actualizarPassword(Request $request, $id) {
-        $request -> validate([
-            'username' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'rol_id' => 'required',
-            ]);
+    
+    public function showChangePasswordForm()
+    {
+        return view('changePassword');
+    }
+
+    public function actualizarPassword(Request $request, $id)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'old_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
         $user = User::findOrFail($id);
-        $user -> username = $request -> username;
-        $user -> email = $request -> email;
-        $user -> password = $request -> password;
-        $user -> rol_id = $request -> rol_id;
-        $user -> save();
-        return back()-> with('mensaje', 'Su contraseña ha sido actualizada');
+
+        // Verificar si la contraseña antigua es correcta
+        if (!Hash::check($request->old_password, $user->password)) {
+            return back()->withErrors(['old_password' => 'La contraseña antigua no es correcta.']);
+        }
+
+        // Actualizar la contraseña
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return back()->with('mensaje', 'Su contraseña ha sido actualizada');
     }
 
     public function cancelarCompra($id) {

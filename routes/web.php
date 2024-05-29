@@ -9,12 +9,31 @@ use App\Http\Controllers\UsersController;
 use App\Models\Calzado;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 
 Route::get('/', function () {
     $calzados = Calzado::all();
-    return view("index", @compact("calzados"));
+    return view("auth.login", @compact("calzados"));
 });
+
+/* Rutas del LOGIN y LOGOUT */
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+/* Rutas del LOGIN y LOGOUT*/
+
+//Ruta registro de usuario
+Route::post('/register', [RegisterController::class, 'registrarUser'])->name('register');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
+
+
+// Ruta para mostrar el formulario de cambiar contraseña
+Route::get('/changePassword', [UsersController::class, 'showChangePasswordForm'])->name('pass.change');
+// Ruta para actualizar la contraseña
+Route::post('/updatePassword/{id}', [UsersController::class, 'actualizarPassword'])->name('password.update');
+
 
 /* Rutas del Admin Panel */
 Route::get('/adminPanel', AdminsController::class)-> name('adminPanel.go');
@@ -80,7 +99,8 @@ Route::get('/calzadoPorCategoria/{id}', [CalzadosController::class, 'calzadoPorC
 
 Route::get('/setLanguage/{lang}', [LanguageController::class, 'setLanguage'])->name('setLanguage');
 
-Route::get('/change-language/{lang}', function ($lang) {
-    session(['locale' => $lang]);
-    return redirect()->back();
-})->name('setLanguage');
+
+
+Auth::routes();
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -7,8 +7,8 @@
     <div class="container my-5">
         <!-- Botón de cambio de idioma -->
         <div class="mb-3 text-end">
-            <a href="{{ route('setLanguage', 'es') }}" class="btn btn-secondary">Español</a>
-            <a href="{{ route('setLanguage', 'en') }}" class="btn btn-secondary">English</a>
+            <a href="{{ route('setLanguage', ['lang' => 'es']) }}" class="btn btn-secondary">Español</a>
+            <a href="{{ route('setLanguage', ['lang' => 'en']) }}" class="btn btn-secondary">English</a>
         </div>
         
         <!-- Sección de Productos -->

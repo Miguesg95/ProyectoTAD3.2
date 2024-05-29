@@ -92,7 +92,10 @@
                 <div class="col-md-6 mt-3 mt-md-0">
                     <div class="d-flex justify-content-end align-items-center">
                         <a href="/index" class="btn btn-outline-light me-3">Vista Cliente</a>
-                        <a href="#" class="btn btn-outline-light me-3">LogOut</a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                        <a href="#" class="btn btn-outline-light me-3" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
                     </div>
                 </div>
             </div>

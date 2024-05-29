@@ -138,6 +138,7 @@ class AdminsController extends Controller
         return back() -> with('mensaje', 'Usuario dado de alta con éxito');
     }
 
+
     public function eliminarUser($id) {
         $user = User::findOrFail($id);
         $user -> delete();

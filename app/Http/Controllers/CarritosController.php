@@ -18,30 +18,37 @@ class CarritosController extends Controller
         $calzados = Calzado::all();
 
         //obtenemos de la sesion el usuario
-        /*$usuario = $request->session()->get('usuario');
+        $usuario = auth()->user();
         if (!$usuario) {
-            return redirect()->route('carrito');
+            return redirect()->route('login');
         }
-        */
+        
         //sacamos su id
-        //$usuarioId = $usuario->id;
-        $carrito = Carrito::where('user_id', '2')->first();
+        $usuarioId = $usuario->id;
+        $carrito = Carrito::where('user_id', $usuarioId)->first();
+
+        if (!$carrito) {
+            $carrito = new Carrito();
+            $carrito->user_id = $usuarioId;
+            $carrito->importeTotal = 0;
+            $carrito->save();
+        }
 
         //faltaria añadir el usuario al comapact
-        return view("carrito",@compact("carrito","calzados"));
+        return view("carrito",@compact("carrito","calzados","usuario"));
     }
     
 
     public function crearVenta(){
         //obtenemos de la sesion el usuario
-        /*$usuario = $request->session()->get('usuario');
+        $usuario = auth()->user();
         if (!$usuario) {
-            return redirect()->route('carrito');
+            return redirect()->route('login');
         }
-        */
+        
         //sacamos su id
-        //$usuarioId = $usuario->id;
-        $carrito = Carrito::where('user_id', '2')->first();
+        $usuarioId = $usuario->id;
+        $carrito = Carrito::where('user_id', $usuarioId)->first();
 
         //Sacamos las lineas de carrito
         $lineasDeCarrito = $carrito->lineaDeCarritos;
@@ -51,7 +58,7 @@ class CarritosController extends Controller
         
         //Creamos el objeto venta
         $venta = new Venta();
-        $venta->user_id = $carrito->user_id;
+        $venta->user_id = $usuarioId;
         $venta->importeTotal = $importeTotalVenta;
         $venta->estado = "En Proceso";
         $venta->save();
@@ -66,9 +73,16 @@ class CarritosController extends Controller
             $lineaDeVenta->calzado_id = $lineaDeCarrito->calzado_id;
             $lineaDeVenta->venta_id = $venta->id; 
             $importeTotalVenta += $lineaDeCarrito->importeParcial;
-
-            $lineaDeCarrito->delete();
             $lineaDeVenta->save();
+
+            // Decrementamos el stock del calzado
+            $calzado = Calzado::findOrFail($lineaDeCarrito->calzado_id);
+            $calzado->stock -= $lineaDeCarrito->cantidad;
+            $calzado->save();
+
+            // Eliminamos la línea de carrito
+            $lineaDeCarrito->delete();
+            
             
         }
         $venta->importeTotal = $importeTotalVenta;
@@ -83,12 +97,17 @@ class CarritosController extends Controller
     public function agregarProductoAlCarrito(Request $request, $id){
 
         // Obtener el carrito del usuario actual
-        $carrito = Carrito::where('user_id', '2')->first();
+        $usuario = auth()->user();
+        if (!$usuario) {
+            return redirect()->route('login');
+        }
+        $usuarioId = $usuario->id;
+        $carrito = Carrito::where('user_id', $usuarioId)->first();
     
         // Crear un nuevo carrito si es nulo
         if ($carrito === null) {
             $carrito = new Carrito();
-            $carrito->user_id = '2'; // Asegúrate de cambiar esto por la lógica para obtener el ID del usuario actual
+            $carrito->user_id = $usuarioId; // Asegúrate de cambiar esto por la lógica para obtener el ID del usuario actual
             $carrito->importeTotal = '0';
             $carrito->save();
         }
