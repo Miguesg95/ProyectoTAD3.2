@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use App\Models\Calzado;
@@ -10,16 +11,82 @@ use App\Models\Rol;
 use App\Models\LineaDeVenta;
 use App\Models\LineaDeCarrito;
 use App\Models\Carrito;
+use App\Models\Favorites;
+use App\Models\Categoria;
 
 class AdminsController extends Controller
 {
-    public function __invoke(){
+    public function __invoke()
+    {
         $calzados = Calzado::all();
         $users = User::all();
         $ventas = Venta::all();
         $roles = Rol::all();
         $carritos = Carrito::all();
-        return view("adminPanel",@compact("calzados","users","ventas","roles","carritos"));
+        $categorias = Categoria::all();
+        $productosPopulares = $this->obtenerProductosPopulares(); // Llamamos a la función para obtener los productos populares
+
+        return view("adminPanel", compact("calzados", "users", "ventas", "roles", "carritos", "productosPopulares", "categorias"));
+    }
+
+    private function obtenerProductosPopulares()
+    {
+        // Obtener los IDs de los productos más favoritos
+        $productosPopularesIds = Favorites::select('calzado_id', DB::raw('count(*) as total'))
+            ->groupBy('calzado_id')
+            ->orderByDesc('total')
+            ->take(10) // Obtener los 10 productos más favoritos
+            ->pluck('calzado_id');
+
+        // Obtener los detalles de los productos más favoritos
+        return Calzado::whereIn('id', $productosPopularesIds)->get();
+    }
+
+
+    public function crearCategoria(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required'
+        ]);
+
+        Categoria::create([
+            'nombre' => $request->nombre
+        ]);
+
+        return back()->with('mensaje', 'Categoría creada con éxito');
+    }
+
+    public function eliminarCategoria($id)
+    {
+        $categoria = Categoria::findOrFail($id);
+        $categoria->delete();
+        return back();
+    }
+
+    public function actualizarCategoria(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required'
+        ]);
+
+        $categoria = Categoria::findOrFail($id);
+        $categoria->nombre = $request->nombre;
+        $categoria->save();
+
+        return back();
+    }
+
+    public function asignarCategorias(Request $request)
+    {
+        $request->validate([
+            'calzado_id' => 'required|exists:calzados,id',
+            'categorias' => 'required|array'
+        ]);
+
+        $calzado = Calzado::findOrFail($request->calzado_id);
+        $calzado->categorias()->sync($request->categorias);
+
+        return back()->with('mensaje', 'Categorías asignadas con éxito');
     }
 
     public function crearCalzado(Request $request) {
@@ -208,4 +275,5 @@ class AdminsController extends Controller
         $carrito -> save();
         return back();
     }
+
 }

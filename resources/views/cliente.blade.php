@@ -1,4 +1,4 @@
-@extends('layouts.basicLayout')
+@extends('layouts.clientLayout')
 
 @section('main')
     <main class="container panel py-3 my-4 text-white">

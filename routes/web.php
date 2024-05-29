@@ -7,6 +7,8 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\CalzadosController;
 use App\Http\Controllers\UsersController;
 use App\Models\Calzado;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\LanguageController;
 
 
 Route::get('/', function () {
@@ -60,3 +62,25 @@ Route::post('/carrito/agregar/{id}', [CarritosController::class, 'agregarProduct
 /* Rutas del Area de Cliente */
 Route::get('/areaCliente', UsersController::class)-> name('client.go');
 /* Rutas del Area de Cliente */
+
+Route::post('/favorites/{calzado}', [FavoriteController::class, 'addFavorite'])->name('favorites.add');
+Route::delete('/favorites/{calzado}', [FavoriteController::class, 'removeFavorite'])->name('favorites.remove');
+
+
+Route::post('/categorias', [AdminsController::class, 'crearCategoria'])->name('categoria.crear');
+Route::put('/categorias/{id}', [AdminsController::class, 'actualizarCategoria'])->name('categoria.actualizar');
+Route::delete('/categorias/{id}', [AdminsController::class, 'eliminarCategoria'])->name('categoria.eliminar');
+Route::post('/calzado/asignarCategorias', [AdminsController::class, 'asignarCategorias'])->name('calzado.asignarCategorias');
+Route::post('/categoria/crear', [AdminsController::class, 'crearCategoria'])->name('categoria.crear');
+Route::delete('/categoria/eliminar/{id}', [AdminsController::class, 'eliminarCategoria'])->name('categoria.eliminar');
+Route::put('/categoria/actualizar/{id}', [AdminsController::class, 'actualizarCategoria'])->name('categoria.actualizar');
+
+
+Route::get('/calzadoPorCategoria/{id}', [CalzadosController::class, 'calzadoPorCategoria'])->name('calzadoPorCategoria');
+
+Route::get('/setLanguage/{lang}', [LanguageController::class, 'setLanguage'])->name('setLanguage');
+
+Route::get('/change-language/{lang}', function ($lang) {
+    session(['locale' => $lang]);
+    return redirect()->back();
+})->name('setLanguage');

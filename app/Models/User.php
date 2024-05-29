@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -57,5 +58,9 @@ class User extends Authenticatable
         return $this->belongsTo(Rol::class);
     }
 
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(Calzado::class, 'favorites', 'user_id', 'calzado_id');
+    }
 
 }

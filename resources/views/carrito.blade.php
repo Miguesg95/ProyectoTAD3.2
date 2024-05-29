@@ -1,4 +1,4 @@
-@extends('layouts.basicLayout')
+@extends('layouts.clientLayout')
 
 @section('main')
     <main class="container panel py-3 my-4 text-white border-top border-bottom">
@@ -8,7 +8,7 @@
         <section id="listar">
             <div class="collapse mb-4 mx-4 show" id="navbarCarritos">
                 @if($carrito)
-                    <h3>Carrito de {{ $carrito->user->username }}</h3>
+                    <h3 style="color: black">Carrito de {{ $carrito->user->username }}</h3>
                     <div class="table-responsive">
                         <table class="table text-center border table-striped">
                             <thead class="table-primary">
